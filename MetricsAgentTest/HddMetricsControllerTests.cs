@@ -10,20 +10,20 @@ namespace MetricsAgentTests
 {
     public class HddMetricsControllerTests
     {
-        private HddMetricsController _hddMetricsController;
+        //private HddMetricsController _hddMetricsController;
 
-        public HddMetricsControllerTests()
-        {
-            _hddMetricsController = new HddMetricsController();
-        }
+        //public HddMetricsControllerTests()
+        //{
+        //    _hddMetricsController = new HddMetricsController();
+        //}
 
-        [Fact]
-        public void GetHddLeftValue_ReturnOk()
-        {
-            TimeSpan fromTime = TimeSpan.FromSeconds(0);
-            TimeSpan toTime = TimeSpan.FromSeconds(100);
-            var result = _hddMetricsController.GetHddLeftValue();
-            Assert.IsAssignableFrom<IActionResult>(result);
-        }
+        //[Fact]
+        //public void GetHddLeftValue_ReturnOk()
+        //{
+        //    TimeSpan fromTime = TimeSpan.FromSeconds(0);
+        //    TimeSpan toTime = TimeSpan.FromSeconds(100);
+        //    var result = _hddMetricsController.GetHddLeftValue();
+        //    Assert.IsAssignableFrom<IActionResult>(result);
+        //}
     }
 }
