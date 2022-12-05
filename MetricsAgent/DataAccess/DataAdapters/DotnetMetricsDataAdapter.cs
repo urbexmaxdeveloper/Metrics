@@ -1,10 +1,13 @@
 ﻿using MetricsAgent.Models;
+using Microsoft.Extensions.Options;
 using System.Data.SQLite;
 
 namespace MetricsAgent.DataAccess.DataAdapters
 {
     public class DotnetMetricsDataAdapter : BaseDataAdapter, IDotnetMetricsDataAdapter
     {
+        public DotnetMetricsDataAdapter(IOptions<DatabaseOptions> databaseoptions) : base(databaseoptions)
+        {}
 
         public void Create(DontnetMetric item)
         {

@@ -16,6 +16,14 @@ namespace MetricsAgent
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region ConfigureOptions
+
+            builder.Services.Configure<DatabaseOptions>(options =>
+            {
+                builder.Configuration.GetSection("Settings:DatabaseOptions").Bind(options);
+            });
+
+            #endregion
 
             #region Configure logging
 
@@ -37,11 +45,14 @@ namespace MetricsAgent
             });
 
             #endregion
-            
-        //    ConfigureSqlLiteConnection();
 
+            #region FirstStart
 
-            // Add services to the container.
+            //    ConfigureSqlLiteConnection();
+
+            #endregion FirstStart
+                      
+            #region RegistryServices
 
             builder.Services.AddControllers();
             builder.Services.AddScoped<ICpuMetricsDataAdapter, CpuMetricsDataAdapter>();
@@ -63,9 +74,12 @@ namespace MetricsAgent
                 });
             });
 
+            #endregion
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            #region Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -75,10 +89,16 @@ namespace MetricsAgent
             app.UseAuthorization();
             app.UseHttpLogging();
 
-
             app.MapControllers();
+
+
+            #endregion
+
             app.Run();
         }
+
+        #region PrepareDB Methods
+
         private static void ConfigureSqlLiteConnection()
         {
             const string connectionString = "Data Source = metrics.db; Version = 3; Pooling = true; Max Pool Size = 100;";
@@ -121,4 +141,8 @@ namespace MetricsAgent
             }
         }
     }
+
+    #endregion
+
+
 }

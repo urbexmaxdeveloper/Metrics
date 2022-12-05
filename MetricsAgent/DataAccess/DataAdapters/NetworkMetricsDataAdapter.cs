@@ -1,10 +1,14 @@
 ﻿using MetricsAgent.Models;
+using Microsoft.Extensions.Options;
 using System.Data.SQLite;
 
 namespace MetricsAgent.DataAccess.DataAdapters
 {
     public class NetworkMetricsDataAdapter : BaseDataAdapter, INetworkMetricsDataAdapter
     {
+        public NetworkMetricsDataAdapter(IOptions<DatabaseOptions> databaseoptions) : base(databaseoptions)
+        {}
+
         public void Create(NetworkMetric item)
         {
             using var connection = new SQLiteConnection(ConnectionString);

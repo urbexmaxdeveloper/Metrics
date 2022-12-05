@@ -1,10 +1,14 @@
 ﻿using MetricsAgent.Models;
+using Microsoft.Extensions.Options;
 using System.Data.SQLite;
 
 namespace MetricsAgent.DataAccess.DataAdapters
 {
     public class RamMetricsDataAdapter : BaseDataAdapter, IRamMetricsDataAdapter
     {
+        public RamMetricsDataAdapter(IOptions<DatabaseOptions> databaseoptions) : base(databaseoptions)
+        {}
+
         public void Create(RamMetric item)
         {
             using var connection = new SQLiteConnection(ConnectionString);

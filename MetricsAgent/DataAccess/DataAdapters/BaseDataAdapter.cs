@@ -1,12 +1,17 @@
-﻿namespace MetricsAgent.DataAccess.DataAdapters
+﻿using Microsoft.Extensions.Options;
+
+namespace MetricsAgent.DataAccess.DataAdapters
 {
     public abstract partial class BaseDataAdapter
     {
         public string ConnectionString { get; protected set; }
 
-        public BaseDataAdapter()
+        public readonly IOptions<DatabaseOptions> _databaseOptions;
+
+        public BaseDataAdapter(IOptions<DatabaseOptions> databaseoptions)
         {
-            ConnectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
+            _databaseOptions = databaseoptions;
+            ConnectionString = databaseoptions.Value.ConnectionString;
         }
     }
 }

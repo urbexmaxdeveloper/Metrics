@@ -1,11 +1,15 @@
 ﻿using MetricsAgent.DataAccess.DataAdapters;
 using MetricsAgent.Models;
+using Microsoft.Extensions.Options;
 using System.Data.SQLite;
 
 namespace MetricsAgent.DataAccess.DataAdapters
 {
     public class CpuMetricsDataAdapter: BaseDataAdapter,ICpuMetricsDataAdapter
-    {    
+    {
+        public CpuMetricsDataAdapter(IOptions<DatabaseOptions> databaseoptions) : base(databaseoptions)
+        {}
+
         public void Create(CpuMetric item)
         {
             using var connection = new SQLiteConnection(ConnectionString);

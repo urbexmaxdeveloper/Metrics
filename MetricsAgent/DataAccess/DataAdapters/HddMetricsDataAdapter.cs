@@ -1,10 +1,14 @@
 ﻿using MetricsAgent.Models;
+using Microsoft.Extensions.Options;
 using System.Data.SQLite;
 
 namespace MetricsAgent.DataAccess.DataAdapters
 {
     public class HddMetricsDataAdapter : BaseDataAdapter, IHddMetricsDataAdapter
     {
+        public HddMetricsDataAdapter(IOptions<DatabaseOptions> databaseoptions) : base(databaseoptions)
+        {}
+
         public void Create(HddMetric item)
         {
             using var connection = new SQLiteConnection(ConnectionString);
