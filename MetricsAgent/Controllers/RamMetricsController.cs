@@ -1,4 +1,5 @@
-﻿using MetricsAgent.DataAccess;
+﻿using AutoMapper;
+using MetricsAgent.DataAccess;
 using MetricsAgent.Models;
 using MetricsAgent.Models.Types;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace MetricsAgent.Controllers
         private readonly IRamMetricsDataAdapter _ramMetricsDataAdapter;
 
         public RamMetricsController(IRamMetricsDataAdapter ramMetricsDataAdapter,
-            ILogger<RamMetricsController> logger) : base(logger)
+            ILogger<RamMetricsController> logger, Mapper mapper) : base(logger, mapper)
         {
             _ramMetricsDataAdapter = ramMetricsDataAdapter;
         }
@@ -21,11 +22,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Create([FromBody] ValueTime request)
         {
             _logger.LogInformation("Create ram metric.");
-            _ramMetricsDataAdapter.Create(new RamMetric
-            {
-                Value = request.Value,
-                Time = (long)request.Time.TotalSeconds
-            });
+            _ramMetricsDataAdapter.Create(_mapper.Map<RamMetric>(request));
             return Ok();
         }
 
@@ -47,12 +44,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Update(RamMetric item)
         {
             _logger.LogInformation("Update ram metric.");
-            _ramMetricsDataAdapter.Update(new RamMetric
-            {
-                Id = item.Id,
-                Value = item.Value,
-                Time = item.Time
-            });
+            _ramMetricsDataAdapter.Update(_mapper.Map<RamMetric>(item));
             return Ok();
         }
 

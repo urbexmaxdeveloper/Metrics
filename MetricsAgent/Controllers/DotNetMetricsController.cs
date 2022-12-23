@@ -1,4 +1,5 @@
-﻿using MetricsAgent.DataAccess;
+﻿using AutoMapper;
+using MetricsAgent.DataAccess;
 using MetricsAgent.Models;
 using MetricsAgent.Models.Types;
 using Microsoft.AspNetCore.Mvc;
@@ -7,12 +8,12 @@ namespace MetricsAgent.Controllers
 {
     [Route("api/metrics/dotnet")]
     [ApiController]
-    public class DotNetMetricsController : BaseController<DotNetMetricsController>
+    public class DotnetMetricsController : BaseController<DotnetMetricsController>
     {
         private readonly IDotnetMetricsDataAdapter _dotnetMetricsDataAdapter;
 
-        public DotNetMetricsController(IDotnetMetricsDataAdapter dotnetMetricsDataAdapter,
-            ILogger<DotNetMetricsController> logger) : base(logger)
+        public DotnetMetricsController(IDotnetMetricsDataAdapter dotnetMetricsDataAdapter,
+            ILogger<DotnetMetricsController> logger, Mapper mapper) : base(logger, mapper)
         {
             _dotnetMetricsDataAdapter = dotnetMetricsDataAdapter;
         }
@@ -21,11 +22,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Create([FromBody] ValueTime request)
         {
             _logger.LogInformation("Create dotnet metric.");
-            _dotnetMetricsDataAdapter.Create(new DontnetMetric
-            {
-                Value = request.Value,
-                Time = (long)request.Time.TotalSeconds
-            });
+            _dotnetMetricsDataAdapter.Create(_mapper.Map<DotnetMetric>(request));
             return Ok();
         }
 
@@ -44,19 +41,14 @@ namespace MetricsAgent.Controllers
         }
 
         [HttpPut("update")]
-        public IActionResult Update(DontnetMetric item)
+        public IActionResult Update(DotnetMetric item)
         {
             _logger.LogInformation("Update dotnet metric.");
-            _dotnetMetricsDataAdapter.Update(new DontnetMetric
-            {
-                Id = item.Id,
-                Value = item.Value,
-                Time = item.Time
-            });
+            _dotnetMetricsDataAdapter.Update(_mapper.Map<DotnetMetric>(item));
             return Ok();
         }
 
-        [HttpDelete("update")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
             _logger.LogInformation("Delete dotnet metric.");

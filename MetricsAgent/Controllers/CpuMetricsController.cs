@@ -1,5 +1,8 @@
-﻿using MetricsAgent.DataAccess;
+﻿using AutoMapper;
+using MetricsAgent.DataAccess;
+using MetricsAgent.DataAccess.DataAdapters;
 using MetricsAgent.Models;
+using MetricsAgent.Models.Dto;
 using MetricsAgent.Models.Types;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +15,7 @@ namespace MetricsAgent.Controllers
         private readonly ICpuMetricsDataAdapter _cpuMetricsDataAdapter;
 
         public CpuMetricsController(ICpuMetricsDataAdapter cpuMetricsDataAdapter,
-            ILogger<CpuMetricsController> logger):base(logger)
+            ILogger<CpuMetricsController> logger, Mapper mapper):base(logger,mapper)
         {
             _cpuMetricsDataAdapter = cpuMetricsDataAdapter;
         }
@@ -21,11 +24,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Create([FromBody] ValueTime request)
         {
             _logger.LogInformation("Create cpu metric.");
-            _cpuMetricsDataAdapter.Create(new CpuMetric
-            {
-                Value = request.Value,
-                Time = (long)request.Time.TotalSeconds
-            });
+            _cpuMetricsDataAdapter.Create(_mapper.Map<CpuMetric>(request));            
             return Ok();
         }
 
@@ -33,9 +32,9 @@ namespace MetricsAgent.Controllers
         public IActionResult GetAll()
         {
             _logger.LogInformation("GetAll cpu metric.");
-            return Ok(_cpuMetricsDataAdapter.GetAll());
+            return Ok(_mapper.Map<List<CpuMetricDto>>(_cpuMetricsDataAdapter.GetAll()));
         }
-
+      
         [HttpGet("getById")]
         public IActionResult GetById(int id)
         {
@@ -47,16 +46,11 @@ namespace MetricsAgent.Controllers
         public IActionResult Update(CpuMetric item)
         {
             _logger.LogInformation("Update cpu metric.");
-            _cpuMetricsDataAdapter.Update(new CpuMetric
-            {
-                Id = item.Id,
-                Value = item.Value,
-                Time = item.Time
-            });
+            _cpuMetricsDataAdapter.Update(_mapper.Map<CpuMetric>(item));
             return Ok();
         }
 
-        [HttpDelete("update")]
+        [HttpDelete("delete")]
         public IActionResult Delete(int id)
         {
             _logger.LogInformation("Delete cpu metric.");
@@ -68,7 +62,7 @@ namespace MetricsAgent.Controllers
         public ActionResult<IList<CpuMetric>> GetCpuMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
         {
             _logger.LogInformation("Get cpu metrics for period.");
-            return Ok(_cpuMetricsDataAdapter.GetByTimePeriod(fromTime, toTime));
+            return Ok(_mapper.Map<List<CpuMetricDto>>(_cpuMetricsDataAdapter.GetByTimePeriod(fromTime, toTime)));
         }  
     } 
 }

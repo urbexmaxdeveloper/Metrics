@@ -1,4 +1,5 @@
-﻿using MetricsAgent.DataAccess;
+﻿using AutoMapper;
+using MetricsAgent.DataAccess;
 using MetricsAgent.Models;
 using MetricsAgent.Models.Types;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace MetricsAgent.Controllers
         private readonly INetworkMetricsDataAdapter _networkMetricsDataAdapter;
 
         public NetworkMetricsController(INetworkMetricsDataAdapter networkMetricsDataAdapter,
-            ILogger<NetworkMetricsController> logger) : base(logger)
+            ILogger<NetworkMetricsController> logger, Mapper mapper) : base(logger, mapper)
         {
             _networkMetricsDataAdapter = networkMetricsDataAdapter;
         }
@@ -21,11 +22,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Create([FromBody] ValueTime request)
         {
             _logger.LogInformation("Create network metric.");
-            _networkMetricsDataAdapter.Create(new NetworkMetric
-            {
-                Value = request.Value,
-                Time = (long)request.Time.TotalSeconds
-            });
+            _networkMetricsDataAdapter.Create(_mapper.Map<NetworkMetric>(request));
             return Ok();
         }
 
@@ -47,12 +44,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Update(NetworkMetric item)
         {
             _logger.LogInformation("Update network metric.");
-            _networkMetricsDataAdapter.Update(new NetworkMetric
-            {
-                Id = item.Id,
-                Value = item.Value,
-                Time = item.Time
-            });
+            _networkMetricsDataAdapter.Update(_mapper.Map<NetworkMetric>(item));
             return Ok();
         }
 
