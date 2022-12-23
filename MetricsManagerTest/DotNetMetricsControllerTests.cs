@@ -10,11 +10,11 @@ namespace MetricsManagerTest
 {
     public class DotNetMetricsControllerTests
     {
-        private DotNetMetricsController _dotnetMetricsController;
+        private DotnetMetricsController _dotnetMetricsController;
 
         public DotNetMetricsControllerTests()
         {
-            _dotnetMetricsController = new DotNetMetricsController();
+            _dotnetMetricsController = new DotnetMetricsController();
         }
 
         [Fact]

@@ -1,4 +1,5 @@
-﻿using MetricsAgent.DataAccess;
+﻿using AutoMapper;
+using MetricsAgent.DataAccess;
 using MetricsAgent.Models;
 using MetricsAgent.Models.Types;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace MetricsAgent.Controllers
         private readonly IHddMetricsDataAdapter _hddMetricsDataAdapter;
 
         public HddMetricsController(IHddMetricsDataAdapter hddMetricsDataAdapter,
-            ILogger<HddMetricsController> logger) : base(logger)
+            ILogger<HddMetricsController> logger ,Mapper mapper) : base(logger, mapper)
         {
             _hddMetricsDataAdapter = hddMetricsDataAdapter;
         }
@@ -21,11 +22,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Create([FromBody] ValueTime request)
         {
             _logger.LogInformation("Create hdd metric.");
-            _hddMetricsDataAdapter.Create(new HddMetric
-            {
-                Value = request.Value,
-                Time = (long)request.Time.TotalSeconds
-            });
+            _hddMetricsDataAdapter.Create(_mapper.Map<HddMetric>(request));
             return Ok();
         }
 
@@ -47,12 +44,7 @@ namespace MetricsAgent.Controllers
         public IActionResult Update(HddMetric item)
         {
             _logger.LogInformation("Update hdd metric.");
-            _hddMetricsDataAdapter.Update(new HddMetric
-            {
-                Id = item.Id,
-                Value = item.Value,
-                Time = item.Time
-            });
+            _hddMetricsDataAdapter.Update(_mapper.Map<HddMetric>(item));
             return Ok();
         }
 

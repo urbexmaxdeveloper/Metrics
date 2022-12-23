@@ -1,12 +1,12 @@
+using AutoMapper;
+using MetricsAgent.Mappings;
 using MetricsAgent.DataAccess;
 using MetricsAgent.DataAccess.DataAdapters;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using System.Data.SQLite;
-using Unity.Injection;
 
 namespace MetricsAgent
 {
@@ -46,12 +46,21 @@ namespace MetricsAgent
 
             #endregion
 
+            #region Configure Mapping
+
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new
+                MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            builder.Services.AddSingleton(mapper);
+
+            #endregion
+
             #region FirstStart
 
             //    ConfigureSqlLiteConnection();
 
             #endregion FirstStart
-                      
+
             #region RegistryServices
 
             builder.Services.AddControllers();
